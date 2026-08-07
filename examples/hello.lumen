@@ -1,0 +1,2 @@
+# Пример 6.1 из docs/lumen_spec.md
+print("Hello, World!")

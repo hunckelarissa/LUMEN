@@ -1,0 +1,11 @@
+# Пример 6.5 из docs/lumen_spec.md — живая структура (Map)
+user = {name: "Lara"}
+user.age = 30
+user.tags = ["dev", "creator"]
+
+print(user.name)    # → Lara
+print(user.age)     # → 30
+print(user.tags)    # → [dev, creator]
+
+remove age from user
+print(user.age)     # → null

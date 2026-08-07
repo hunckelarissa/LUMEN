@@ -1,0 +1,348 @@
+Lumen Programming Language
+Formal Language Specification (Draft 1)
+1. Общая модель языка
+
+Lumen — это интерпретируемый высокоуровневый язык программирования общего назначения.
+
+Основные характеристики:
+
+Свойство	Значение
+типизация	динамическая + опциональная статическая
+парадигма	мультипарадигменная
+выполнение	интерпретация
+блоки	ключевые слова end
+модули	файловые
+2. Лексическая структура
+2.1 Набор символов
+
+Исходный код Lumen использует Unicode UTF-8.
+
+Допустимые категории:
+
+letters
+digits
+symbols
+whitespace
+2.2 Пробельные символы
+space
+tab
+newline
+
+Пробелы:
+
+разделяют токены
+
+не влияют на структуру программы
+
+(в отличие от Python)
+
+3. Комментарии
+Однострочные
+# comment
+Многострочные
+=begin
+
+text
+
+=end
+
+(как в Ruby)
+
+4. Идентификаторы
+
+Идентификатор:
+
+letter { letter | digit | "_" }
+
+Примеры:
+
+value
+user_name
+counter1
+5. Ключевые слова
+
+Зарезервированные слова:
+
+let
+func
+return
+if
+else
+loop
+break
+continue
+import
+module
+end
+transform
+become
+shift
+grow
+6. Литералы
+6.1 Целые числа
+10
+42
+1000
+6.2 Вещественные
+3.14
+0.5
+10.0
+6.3 Строки
+"hello"
+"world"
+
+Экранирование:
+
+\n
+\t
+\"
+6.4 Булевы значения
+true
+false
+6.5 Null
+nil
+7. Операторы
+Арифметические
++
+-
+*
+/
+%
+Сравнения
+==
+!=
+<
+>
+<=
+>=
+Логические
+and
+or
+not
+8. Блоки
+
+Все блоки закрываются ключевым словом:
+
+end
+Пример
+if x > 10
+    print("big")
+end
+9. Объявление переменных
+
+Переменная создаётся оператором let.
+
+let x = 10
+Типизированная переменная
+let x:int = 10
+Вывод типа
+let x = 10
+10. Присваивание
+x = 20
+11. Условный оператор
+Синтаксис
+if expression
+    statements
+end
+С веткой else
+if x > 10
+    print("big")
+else
+    print("small")
+end
+12. Циклы
+Универсальный цикл
+loop condition
+    statements
+end
+
+Пример:
+
+let i = 0
+
+loop i < 10
+    print(i)
+    i = i + 1
+end
+13. Функции
+Определение
+func name(parameters)
+    statements
+end
+
+Пример
+
+func add(a, b)
+    return a + b
+end
+Вызов
+add(2,3)
+14. Возврат значения
+return expression
+15. Модули
+Объявление
+module math
+    func add(a,b)
+        return a+b
+    end
+end
+Импорт
+import math
+16. Структуры данных
+Списки
+[1,2,3]
+Доступ
+list[0]
+Словари
+{
+    "name": "Alex",
+    "age": 20
+}
+17. Трансформации (уникальная концепция)
+
+Специальная конструкция:
+
+transform variable -> expression
+
+Пример:
+
+let x = 10
+
+transform x -> x * 2
+
+эквивалентно
+
+x = x * 2
+18. Оператор become
+
+Изменяет тип или структуру значения.
+
+become value as type
+
+Пример:
+
+become x as string
+19. Grow
+
+Используется для постепенного накопления.
+
+grow variable with value
+
+пример
+
+grow total with 10
+
+эквивалент:
+
+total = total + 10
+20. Программа
+
+Полная программа:
+
+import math
+
+func main()
+
+    let x = 10
+
+    loop x > 0
+        print(x)
+        x = x - 1
+    end
+
+end
+21. Модель исполнения
+
+Программа выполняется:
+
+top → bottom
+
+точка входа:
+
+main()
+
+если она существует.
+
+22. Обработка ошибок
+
+Ошибки:
+
+SyntaxError
+TypeError
+RuntimeError
+ImportError
+23. REPL
+
+Интерактивный режим позволяет выполнять:
+
+expression
+statement
+function definition
+24. Формальная грамматика (EBNF)
+program      = { statement }
+
+statement    =
+      variable_decl
+    | assignment
+    | if_stmt
+    | loop_stmt
+    | func_def
+    | return_stmt
+    | expr
+
+variable_decl =
+      "let" IDENTIFIER "=" expr
+
+assignment   =
+      IDENTIFIER "=" expr
+
+if_stmt =
+      "if" expr block ["else" block] "end"
+
+loop_stmt =
+      "loop" expr block "end"
+
+func_def =
+      "func" IDENTIFIER "(" [params] ")" block "end"
+
+block =
+      { statement }
+
+params =
+      IDENTIFIER { "," IDENTIFIER }
+
+expr =
+      term { ("+" | "-") term }
+
+term =
+      factor { ("*" | "/") factor }
+
+factor =
+      NUMBER
+    | STRING
+    | IDENTIFIER
+    | "(" expr ")"
+25. Расширяемость языка
+
+Язык допускает:
+
+макросы
+
+DSL
+
+пользовательские операторы
+
+(в будущих версиях)
+
+26. Версионирование
+Lumen 0.x — experimental
+Lumen 1.0 — stable
+27. Расширения компилятора
+
+Возможные backend-ы:
+
+C transpiler
+
+bytecode VM
+
+native compiler

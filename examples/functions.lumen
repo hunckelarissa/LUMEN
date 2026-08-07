@@ -1,0 +1,24 @@
+# Примеры 6.9, 6.11 из docs/lumen_spec.md — функции высшего порядка и проверка типа
+def apply(f, x)
+  return f(x)
+end
+
+double = do |x| x * 2 end
+
+print(apply(double, 5))    # → 10
+
+def describe(v)
+  if v is Number
+    print("это число: ", v)
+  end
+  if v is String
+    print("это строка: ", v)
+  end
+  if v is Null
+    print("это null")
+  end
+end
+
+describe(42)
+describe("hello")
+describe(null)

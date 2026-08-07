@@ -1,0 +1,223 @@
+1. Первая фишка — Transform Pipelines
+
+Главная идея:
+данные проходят через цепочку трансформаций.
+
+Это делает код похожим на эволюцию состояния.
+
+Синтаксис
+transform value
+    with double
+    with increment
+    with square
+end
+Эквивалент
+value = square(increment(double(value)))
+Определение трансформации
+func double(x)
+    return x * 2
+end
+Реальный пример
+let data = 5
+
+transform data
+    with double
+    with double
+    with increment
+end
+
+результат:
+
+21
+Почему это метаморфность
+
+Здесь данные постепенно меняются, как состояние системы.
+
+Это ближе к идеям:
+
+functional pipelines
+
+dataflow
+
+как в:
+
+Elixir
+
+F#
+
+2. Вторая фишка — Become (изменение типа)
+
+Обычные языки не любят менять тип объекта.
+
+Lumen позволяет объекту стать другим типом.
+
+Пример
+let x = 10
+
+become x as string
+
+Теперь:
+
+x == "10"
+
+Но это может быть глубже.
+
+Структурная метаморфоза
+let data = [1,2,3]
+
+become data as set
+Или
+become user as Admin
+
+Это делает язык ближе к динамическим системам, как:
+
+Smalltalk
+
+Julia
+
+3. Третья фишка — Grow (эволюция состояния)
+
+grow — это семантическое накопление.
+
+Пример
+let total = 0
+
+grow total with 10
+grow total with 5
+grow total with 3
+
+эквивалент:
+
+total = 18
+
+Но grow может работать с разными типами.
+
+Список
+let items = []
+
+grow items with 1
+grow items with 2
+Строка
+let text = ""
+
+grow text with "hello"
+grow text with " world"
+
+То есть grow — семантическая операция роста, а не просто +.
+
+4. Четвёртая фишка — Shift (изменение поведения)
+
+Самая интересная часть.
+
+shift меняет поведение объекта или функции.
+
+Пример
+func greet()
+    print("hello")
+end
+
+Теперь изменим её:
+
+shift greet
+    print("HELLO!!!")
+end
+
+Теперь функция делает другое.
+
+Это концепция runtime mutation, похожая на:
+
+Lisp
+
+Smalltalk
+
+5. Пятая фишка — программы как эволюция
+
+Можно писать код как цепочку изменений.
+
+Пример
+let state = 1
+
+transform state with double
+grow state with 3
+transform state with square
+
+Состояние:
+
+1
+→ 2
+→ 5
+→ 25
+6. Самая мощная идея — Morph Blocks
+
+Можно объявить метаморфные блоки.
+
+Пример
+morph number
+
+    transform double
+        return self * 2
+    end
+
+    transform square
+        return self * self
+    end
+
+end
+
+Теперь:
+
+5.double()
+5.square()
+
+Это делает язык расширяемым через трансформации.
+
+7. Чем Lumen реально отличается
+язык	идея
+Python	читаемость
+Ruby	выразительность
+Rust	безопасность
+Lumen	метаморфозы состояния и поведения
+8. Коротко: фишки Lumen
+
+Главные механизмы:
+
+1️⃣ Transform
+
+pipeline изменения данных
+
+2️⃣ Become
+
+смена типа или структуры
+
+3️⃣ Grow
+
+семантическое накопление
+
+4️⃣ Shift
+
+изменение поведения
+
+5️⃣ Morph
+
+расширение типов трансформациями
+
+9. Как будет выглядеть реальный код
+let value = 3
+
+transform value
+    with double
+    with square
+end
+
+grow value with 5
+
+become value as string
+10. Почему это действительно новый язык
+
+Большинство языков строится вокруг:
+
+state → mutate
+
+Lumen строится вокруг:
+
+state → transform → evolve

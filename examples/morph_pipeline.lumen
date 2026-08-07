@@ -1,0 +1,30 @@
+# Пример 6.12 из docs/lumen_spec.md — morph-блок (data pipeline)
+# Примечание: remove_nulls и scale — пользовательские функции,
+# их нужно определить до запуска (упрощённые версии ниже).
+
+def remove_nulls(rows)
+  return filter(rows, do |r| not (r is Null) end)
+end
+
+def scale(rows, mode)
+  return map(rows, do |r| r * 1 end)   # заглушка нормализации
+end
+
+morph dataset
+  state rows: List = [1, null, 2, null, 3]
+  state cleaned: Boolean = false
+
+  transform "clean"
+    state.rows = remove_nulls(state.rows)
+    state.cleaned = true
+  end
+
+  transform "normalize"
+    skip if state.cleaned == false
+    state.rows = scale(state.rows, "zscore")
+  end
+end
+
+dataset.run()
+print(dataset.state.rows)   # → [1, 2, 3]
+print(dataset.history)      # → [{step: "clean", status: "ok"}, {step: "normalize", status: "ok"}]

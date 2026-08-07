@@ -1,0 +1,17 @@
+# Примеры 6.3–6.4 из docs/lumen_spec.md — эволюция функции
+def show(v)
+  when Number then print("number: ", v)
+  when String then print("string: ", v)
+  when List   then print("list of ", len(v), " items")
+end
+
+show(10)          # → number: 10
+show("hello")     # → string: hello
+show([1, 2, 3])   # → list of 3 items
+
+# Расширение функции — добавление ветви
+def show(v)
+  when Boolean then print("bool: ", v)
+end
+
+show(true)        # → bool: true

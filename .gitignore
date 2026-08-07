@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE и служебные каталоги
+.idea/
+.vscode/
+.gigacode/
+.kilo/
+
+# ОС
+Thumbs.db
+.DS_Store

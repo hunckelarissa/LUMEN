@@ -1,0 +1,39 @@
+# Примеры 6.13–6.14 из docs/lumen_spec.md — morph-агент и LLM-native директивы
+# Примечание: sense, decide, execute — пользовательские функции (заглушки ниже).
+
+def sense()
+  return "obstacle ahead"
+end
+
+def decide(goal, observation)
+  return "turn left"
+end
+
+def execute(action)
+  print("executing: ", action)
+end
+
+morph agent
+  state goal: String = "reach the exit"
+  state memory: List = []
+
+  shadow "LLM: treat this as ReAct loop"
+  think "Current state: raw observation pending"
+
+  transform "observe"
+    state.observation = sense()
+  end
+
+  transform "reason"
+    reason "deciding action based on observation"
+    state.action = decide(state.goal, state.observation)
+  end
+
+  transform "act"
+    explain "performing the chosen action"
+    execute(state.action)
+  end
+end
+
+agent.run()
+print(agent.history)

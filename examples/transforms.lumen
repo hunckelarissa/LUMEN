@@ -1,0 +1,10 @@
+# Пример 6.2 из docs/lumen_spec.md — трансформация типов
+x = "42"
+y = x + 1
+print(y)           # → 43
+
+z = 100 + "!"
+print(z)           # → "100!"
+
+a = "3.14" as Number
+print(a * 2)       # → 6.28

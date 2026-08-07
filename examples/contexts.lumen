@@ -1,0 +1,8 @@
+# Пример 6.10 из docs/lumen_spec.md — контекстная адаптация
+context cli
+  print("Running in CLI mode")
+end
+
+context test
+  print("Running in test mode")
+end
