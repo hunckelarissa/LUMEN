@@ -3,7 +3,7 @@
 
 > **morph для LUMEN — то же, что async/await для JavaScript, ownership для Rust, монады для Haskell.**
 
-> ⚠️ **Статус: стадия проектирования.** Спецификация языка готова, интерпретатор ещё не реализован — в `src/` находится CLI-заглушка (баннер и версия). Примеры кода ниже показывают, **как будет выглядеть** LUMEN; запустить их пока нельзя. План реализации: `docs/lumen_todo.md`, дорожная карта: `ROADMAP.md`.
+> **Статус: прототип ядра 0.0.4.** Интерпретатор выполняет программы (`python lumen.py run examples/hello.lumen`, `python lumen.py version` печатает `lumen 0.0.4`). В коде есть morph (`state`, `transform`, `skip if`, `require`, `.run()`, `.history`), вложенные morph, оператор `~=` и блок `dissonance`. Кольцевая история, значение сущности на шаге, `self`, `grow`, `become`, `extend` и `import` ждут следующих решений. План: `ROADMAP.md`.
 
 *English version: [README.en.md](README.en.md)*
 
@@ -63,14 +63,14 @@ end
 ### Контекстная адаптация
 Контекст исполнения (`cli`, `test`) влияет на интерпретацию операций.
 
-### LLM-native
-Встроенные конструкции `shadow`, `think`, `reason`, `explain` — теневые подсказки для языковых моделей, парсимые, но не исполняемые.
+### LLM-директивы
+`shadow`, `think`, `reason`, `explain` парсятся и не исполняются: это документирующие комментарии. Вопрос, нужны ли языку модели, отложен.
 
 ---
 
-## Как будет выглядеть код
+## Как выглядит код
 
-*(целевой синтаксис v0.1; интерпретатор в разработке, см. «Статус проекта»)*
+*(синтаксис прототипа; запуск: `python lumen.py run examples/<файл>.lumen`)*
 
 ```
 # Переменные и трансформации
@@ -121,6 +121,7 @@ print(counter.history)       # → [{step: "increment", status: "ok"}, ...]
 | Спецификация ядра (обзор) | `docs/core-language-specification.md` | Быстрое чтение (производный от spec) |
 | Архитектура проекта | `docs/project-architecture.md` | Контрибьюторы |
 | Открытые вопросы | `docs/lumen_open_questions.md` | Все: что ещё не решено |
+| Журнал решений автора | `LUMEN_decisions_needed.md` | Решения от 18.10.2026 и то, что ещё без имени |
 | План разработки | `ROADMAP.md` | Все: этапы и границы версий |
 | История изменений | `CHANGELOG.md` | Все |
 
@@ -130,25 +131,29 @@ print(counter.history)       # → [{step: "increment", status: "ok"}, ...]
 
 ## Статус проекта
 
-**Текущая версия документации:** 0.0.3 (07.08.2026)  
-**Целевая версия прототипа:** 0.1.0  
-**Код:** CLI-заглушка (`python lumen.py version` работает; `run` и `repl` — ещё нет)
+**Текущая версия пакета:** 0.0.4 (18.10.2026)  
+**Код:** прототип интерпретатора в `src/lumen/`
 
-### Завершено
-- [x] Исследование метаморфной парадигмы
-- [x] Манифест языка
-- [x] Формализованная спецификация (EBNF-грамматика, семантика, типы, ошибки)
-- [x] Техническое задание с критериями приёмки
-- [x] Детальный TODO для реализации (12 этапов)
-- [x] Morph-блоки: синтаксис, семантика, примеры
-- [x] LLM-native конструкции: shadow, think, reason, explain
-- [x] Формальная семантическая модель (потоки, типы-траектории)
+```
+python lumen.py run examples/hello.lumen
+python lumen.py repl
+python lumen.py version
+pytest tests/
+```
 
-### В процессе
-- [ ] Прототип интерпретатора на Python (lexer → parser → AST → interpreter)
-- [ ] CLI (`lumen run`, `lumen repl`, `lumen version`) — пока реализована только `version`
-- [ ] Тестовая инфраструктура (pytest, golden-тесты) — smoke-тесты заглушки уже проходят
-- [x] Примеры программ (.lumen файлы) — `examples/`
+### Уже есть
+- [x] Спецификация, ТЗ, манифест, исследование парадигмы
+- [x] Интерпретатор: лексер, парсер, AST, окружение, типы, встроенные функции
+- [x] Morph: `state`, `transform`, `skip if`, `require`, `.run()`, `.history`, вложенные morph
+- [x] Оператор `~=` (точное совпадение историй) и блок `dissonance strict|soft|creative`
+- [x] CLI `run` / `repl` / `version`, pytest и golden-тесты
+- [x] Примеры в `examples/`: hello, transforms, evolution, living_map, control_flow, functions, contexts, fibonacci, fizzbuzz, morph_pipeline, morph_agent, morph_nested, path_eq, dissonance, require, llm_native
+
+### Дальше
+- [ ] Кольцевая история, полная интроспекция значения на шаге, `self`
+- [ ] `grow`, `become`, `extend` — слова зарезервированы, синтаксис не закрыт
+- [ ] Модули `import`, `trace`, форматтер, транспилятор в C
+- [ ] Порог покрытия 70% не замерялся; Linux в этой среде не проверялся
 
 ---
 

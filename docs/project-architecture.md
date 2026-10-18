@@ -1,6 +1,6 @@
 # Архитектура проекта LUMEN
-**Версия:** 0.0.3  
-**Дата обновления:** 07.08.2026
+**Версия:** 0.0.4  
+**Дата обновления:** 18.10.2026
 
 ---
 
@@ -18,142 +18,119 @@
 
 ## 2. Структура репозитория
 
+Рабочий код — пакет `src/lumen/`. Отдельных каталогов `src/*.py` и `tools/` нет: CLI и REPL лежат в пакете. Контекст исполнения живёт в `types.py` и `interpreter.py`. Директивы `shadow`, `think`, `reason`, `explain` разбирает парсер и хранит morph; отдельного модуля `llm_native.py` нет.
+
 ```text
 lumen/
-├── src/
-│   ├── __init__.py
-│   ├── lexer.py            # токенизация исходного кода
-│   ├── tokens.py            # перечисление TokenType, класс Token
-│   ├── parser.py            # рекурсивный нисходящий парсер
-│   ├── ast_nodes.py         # датаклассы узлов AST
-│   ├── interpreter.py       # интерпретатор AST
-│   ├── environment.py       # модель окружения (связный список)
-│   ├── types.py             # типы, трансформации, lumen_truthy
-│   ├── errors.py            # иерархия ошибок
-│   ├── builtins.py          # встроенные функции
-│   ├── context.py           # контекстная модель
-│   ├── morph.py             # morph-блок: state, transforms, history, .run()
-│   └── llm_native.py        # shadow, think, reason, explain — метаданные
-│
-├── tools/
-│   ├── __init__.py
-│   ├── cli.py               # точка входа CLI (lumen run/repl/version)
-│   └── repl.py              # интерактивный режим
+├── src/lumen/
+│   ├── __init__.py          # версия пакета 0.0.4
+│   ├── tokens.py            # TokenType, ключевые слова
+│   ├── lexer.py
+│   ├── ast_nodes.py
+│   ├── parser.py
+│   ├── environment.py
+│   ├── types.py             # значения, сложение, `as`, `~=` по историям
+│   ├── errors.py
+│   ├── builtins.py
+│   ├── morph.py             # state, шаги, вложенность, require, history
+│   ├── interpreter.py       # исполнение, диссонанс, контекст
+│   ├── repl.py
+│   └── cli.py               # run / repl / version
 │
 ├── tests/
-│   ├── __init__.py
 │   ├── test_lexer.py
 │   ├── test_parser.py
 │   ├── test_interpreter.py
 │   ├── test_transforms.py
-│   ├── test_evolution.py
 │   ├── test_errors.py
 │   ├── test_morph.py
-│   ├── test_llm_native.py
-│   └── golden/              # golden-тесты (.lumen + .expected)
+│   ├── test_dissonance.py
+│   ├── test_require.py
+│   ├── test_smoke.py
+│   └── golden/              # пары .lumen + .expected
 │
-├── examples/                # рабочие примеры программ
-│   ├── hello.lumen
-│   ├── transforms.lumen
-│   ├── evolution.lumen
-│   ├── living_map.lumen
-│   ├── fibonacci.lumen
-│   ├── fizzbuzz.lumen
-│   ├── morph_pipeline.lumen
-│   └── morph_agent.lumen
+├── examples/                # hello, transforms, evolution, living_map,
+│                            # control_flow, functions, contexts, fibonacci,
+│                            # fizzbuzz, morph_pipeline, morph_agent,
+│                            # morph_nested, path_eq, dissonance, require,
+│                            # llm_native
 │
-├── docs/                    # проектная документация
-│   ├── lumen_manifesto.md
-│   ├── lumen_spec.md
-│   ├── lumen_tz.md
-│   ├── lumen_todo.md
-│   ├── lumen_open_questions.md
-│   ├── core-language-specification.md
-│   ├── metamorphic-paradigm-research.md
-│   └── project-architecture.md
-│
-├── versions/                # зафиксированные версии документов
-│   └── v0.0.1/
-│
-├── research/                # исследовательские заметки
-│   ├── main/
-│   └── notes/
-│
-├── lumen.py                 # точка входа: python lumen.py run/repl/version
+├── docs/
+├── research/                # исторические заметки, не источник требований
+├── lumen.py                 # python lumen.py run/repl/version
 ├── pyproject.toml
 ├── README.md
 ├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
 ├── ROADMAP.md
-└── LICENSE
+└── CHANGELOG.md
 ```
 
 ---
 
 ## 3. Компоненты ядра
 
-### 3.1. Лексер (`src/lexer.py`, `src/tokens.py`)
+### 3.1. Лексер (`src/lumen/lexer.py`, `src/lumen/tokens.py`)
 
 Преобразует исходный текст в поток токенов.  
-Поддерживает: литералы, ключевые слова (включая `morph`, `transform`, `state`, `skip`, `break`, `continue`), операторы, LLM-директивы.
+Поддерживает литералы, ключевые слова (`morph`, `transform`, `state`, `skip`, `require`, `dissonance`, `break`, `continue`), оператор `~=`, LLM-директивы. `become`, `grow` и `extend` зарезервированы.
 
-### 3.2. Парсер (`src/parser.py`)
+### 3.2. Парсер (`src/lumen/parser.py`)
 
 Рекурсивный нисходящий парсер. Строит AST по потоку токенов.  
 Грамматика соответствует EBNF из `docs/lumen_spec.md`.
 
-### 3.3. AST (`src/ast_nodes.py`)
+### 3.3. AST (`src/lumen/ast_nodes.py`)
 
-Датаклассы для каждого типа узла: `Program`, `AssignStmt`, `FuncDef`, `IfStmt`, `WhileStmt`, `ForStmt`, `MorphStmt`, `TransformClause`, `StateDecl`, `LLMDirective`, `BreakStmt`, `ContinueStmt`, и все выражения.
+Датаклассы узлов: `Program`, `AssignStmt`, `FuncDef`, `IfStmt`, `WhileStmt`, `ForStmt`, `MorphStmt`, `TransformClause`, `RequireClause`, `StateDecl`, `DissonanceStmt`, `LLMDirective`, `BreakStmt`, `ContinueStmt` и выражения.
 
-### 3.4. Интерпретатор (`src/interpreter.py`)
+### 3.4. Интерпретатор (`src/lumen/interpreter.py`)
 
-Обходит AST и выполняет программу. Управляет окружением, контекстом, диспетчеризацией функций, morph-блоками.
+Обходит AST и выполняет программу. Управляет окружением, контекстом, диспетчеризацией функций и режимом диссонанса.
 
-### 3.5. Morph-блок (`src/morph.py`)
+### 3.5. Morph-блок (`src/lumen/morph.py`)
 
-Класс `LumenMorph`: объект с `state` (Map), `transforms` (список шагов), `history` (append-only лог), `llm_directives` (метаданные). Метод `.run()` выполняет шаги последовательно.
+Класс `LumenMorph`: `state` (Map), шаги, вложенные дети, `history` (список записей, пока без кольцевого буфера). `.run()` выполняет свои шаги, затем детей. `skip if` пропускает шаг. `require` при ложном условии пишет статус `error` и прерывает прогон.
 
-### 3.6. LLM-native (`src/llm_native.py`)
+### 3.6. LLM-директивы
 
-Обработка директив `shadow`, `think`, `reason`, `explain`. Парсятся, но не исполняются. Сохраняются в метаданных morph-объекта.
+`shadow`, `think`, `reason`, `explain` парсятся и не исполняются. Хранятся в метаданных morph-объекта. Отдельного модуля под них нет.
 
 ---
 
 ## 4. Инструменты
 
-### 4.1. CLI (`tools/cli.py`)
+### 4.1. CLI (`src/lumen/cli.py`)
 
 | Команда | Действие |
 |---|---|
 | `lumen run <file>` | Интерпретация .lumen файла |
 | `lumen repl` | Интерактивный режим |
-| `lumen version` | Вывод версии |
+| `lumen version` | Печатает `lumen 0.0.4` |
 
-Будущее (v0.2+): `lumen compile`, `lumen fmt`, `lumen test`.
+Дальше по дорожной карте: `lumen compile`, `lumen fmt`.
 
-### 4.2. REPL (`tools/repl.py`)
+### 4.2. REPL (`src/lumen/repl.py`)
 
-Интерактивный режим с сохранением состояния между вводами. Выводит результат выражений через `=>`.
+Интерактивный режим с сохранением состояния между вводами. Печатает `=>`, когда результат выражения не `null`.
 
 ---
 
 ## 5. Тестовая инфраструктура
 
-- **Юнит-тесты** (`tests/test_*.py`): лексер, парсер, интерпретатор, трансформации, эволюция, ошибки, morph, LLM-native.
-- **Golden-тесты** (`tests/golden/`): пары `.lumen` + `.expected` — проверка вывода программ.
+- **Юнит-тесты** (`tests/test_*.py`): лексер, парсер, интерпретатор, трансформации, ошибки, morph, диссонанс, `require`, CLI.
+- **Golden-тесты** (`tests/golden/`): пары `.lumen` + `.expected`.
 - **Фреймворк**: pytest.
-- **Критерий**: покрытие ≥ 70%.
+- **Порог покрытия ≥ 70%** записан как цель и в этой среде не замерялся.
 
 ---
 
 ## 6. Этапы реализации
 
-1. **Документация** — парадигма, манифест, спецификация, ТЗ. *(завершено)*
-2. **Прототип** — лексер, парсер, AST, интерпретатор (Python). *(в процессе)*
-3. **Morph-блок** — парсинг, AST, интерпретация morph/transform/state/skip/history.
-4. **LLM-native** — shadow, think, reason, explain — парсинг и хранение метаданных.
-5. **Тесты** — юнит-тесты + golden-тесты.
-6. **CLI и REPL** — точка входа, интерактивный режим.
-7. **Примеры и документация** — .lumen файлы, «Быстрый старт».
-8. **Транспилятор в C** — генерация C-кода + рантайм. *(перспектива)*
+1. **Документация** — парадигма, манифест, спецификация, ТЗ. Готово.
+2. **Прототип** — лексер, парсер, AST, интерпретатор. Готово, пакет `src/lumen/`.
+3. **Morph-блок** — `state`, `transform`, `skip if`, `require`, `.run()`, `.history`, вложенность. Готово.
+4. **LLM-директивы** — парсинг без исполнения. Готово. Развитие темы отложено.
+5. **Тесты** — юнит-тесты и golden-тесты есть. Порог покрытия не замерен.
+6. **CLI и REPL** — готовы.
+7. **Примеры** — `examples/*.lumen` запускаются.
+8. **Транспилятор в C** — впереди, см. `ROADMAP.md`.

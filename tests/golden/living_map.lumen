@@ -1,0 +1,6 @@
+user = {name: "Lara"}
+user.age = 30
+print(user.name)
+print(user.age)
+remove age from user
+print(user.age)

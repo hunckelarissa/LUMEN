@@ -3,7 +3,7 @@
 
 > **morph is to LUMEN what async/await is to JavaScript, ownership is to Rust, and monads are to Haskell.**
 
-> ⚠️ **Status: design stage.** The language specification is complete, but the interpreter is not implemented yet — `src/` contains a CLI stub (banner and version only). The code samples below show what LUMEN **will** look like; they cannot be executed yet. Implementation plan: `docs/lumen_todo.md`, roadmap: `ROADMAP.md`.
+> **Status: core prototype 0.0.4.** The interpreter runs programs (`python lumen.py run examples/hello.lumen`). `python lumen.py version` prints `lumen 0.0.4`. The code includes morph blocks (`state`, `transform`, `skip if`, `require`, `.run()`, `.history`), nested morphs, the `~=` operator, and a `dissonance` block. Ring-buffer history, value snapshots, `self`, `grow`, `become`, `extend`, and `import` are still ahead. Plan: `ROADMAP.md`.
 
 *Русская версия: [README.md](README.md)*
 
@@ -47,12 +47,13 @@ No existing language offers state evolution as a first-class language abstractio
 - **Function evolution** — functions extend behavior via `when` clauses without redefinition.
 - **Living structures** — Map objects change their fields at any moment: `user.age = 30`, `remove age from user`.
 - **Context adaptation** — the execution context (`cli`, `test`) affects how operations are interpreted.
-- **LLM-native** — built-in `shadow`, `think`, `reason`, `explain` directives: parseable but non-executable hints for language models.
+- **LLM directives** — `shadow`, `think`, `reason`, `explain` are parsed and not executed. Whether the language should target language models is deferred.
 
 ---
 
 ## Documentation
 
+**Current documentation version:** 0.0.4 (18.10.2026).  
 Primary documents are currently in Russian. English translations are planned before the community launch.
 
 | Document | File |
@@ -91,7 +92,7 @@ Primary documents are currently in Russian. English translations are planned bef
 
 ## Contributing
 
-See `CONTRIBUTING.md`. At the current stage the most valuable contributions are specification review, open-questions discussion, and implementing stages from `docs/lumen_todo.md`.
+See `CONTRIBUTING.md`. The interpreter prototype lives in `src/lumen/`. Useful contributions now are specification fixes, open questions, tests, examples, and the remaining items in `ROADMAP.md`.
 
 ## License
 

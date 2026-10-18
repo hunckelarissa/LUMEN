@@ -1,8 +1,8 @@
 # LUMEN — Справочник сообщений об ошибках
-**Версия документа:** 0.0.3
-**Дата обновления:** 12.04.2026
+**Версия документа:** 0.0.4
+**Дата обновления:** 18.10.2026
 **Источник истины:** `docs/lumen_spec.md` §IV (при расхождении приоритет у спецификации)
-**Статус:** документ фазы проектирования — обработчик ошибок ещё не реализован
+**Статус:** классы ошибок реализованы в `src/lumen/errors.py`
 
 ---
 
@@ -116,4 +116,9 @@ LumenError
 [MorphError] transform "clean" failed: [NameError] undefined variable 'remove_nulls'
   в строке 6, колонке 5
   > state.rows = remove_nulls(state.rows)
+```
+
+Невыполненное `require` — та же ошибка шага. Тело шага не выполняется, в `history` статус `error`:
+```
+[MorphError] require failed in transform "lock"
 ```

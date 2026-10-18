@@ -1,0 +1,19 @@
+morph left
+  state n: Number = 0
+  transform "inc"
+    state.n = state.n + 1
+  end
+end
+
+morph right
+  state n: Number = 5
+  transform "inc"
+    state.n = state.n + 1
+  end
+end
+
+left.run()
+right.run()
+print(left ~= right)
+print(left.state.n)
+print(right.state.n)

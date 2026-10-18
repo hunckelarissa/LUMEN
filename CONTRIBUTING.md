@@ -2,7 +2,7 @@
 Спасибо, что хотите внести вклад в развитие языка!  
 Этот документ описывает правила и рекомендации, которые помогут нам работать согласованно и эффективно.
 
-> **Текущая фаза проекта — проектирование и старт прототипа.** Интерпретатор ещё не реализован (в `src/` — CLI-заглушка). Сейчас самый ценный вклад: ревью спецификации (`docs/lumen_spec.md`), обсуждение открытых вопросов (`docs/lumen_open_questions.md`) и реализация этапов из `docs/lumen_todo.md`.
+> **Текущая фаза — рабочий прототип интерпретатора** в `src/lumen/` (версия пакета 0.0.4). Ценный вклад: правки спецификации (`docs/lumen_spec.md`), открытые вопросы (`docs/lumen_open_questions.md`), тесты, примеры и следующие пункты `ROADMAP.md`.
 
 ---
 
@@ -25,7 +25,7 @@ pip install -r requirements.txt   # Только pytest; сам интерпре
 ```bash
 pytest tests/
 ```
-Убедитесь, что все тесты проходят до ваших изменений. Пока интерпретатор не реализован, это smoke-тесты CLI-заглушки; структура тестов будет расти по мере реализации этапов из `docs/lumen_todo.md`.
+Убедитесь, что `pytest tests/` зелёный до ваших изменений. Набор покрывает лексер, парсер, интерпретатор, трансформации, morph, диссонанс, `require` и golden-тесты.
 
 ---
 
@@ -69,14 +69,12 @@ PR без тестов может быть отклонён.
 
 Каждая новая функция или изменение должны сопровождаться тестами.
 
-Целевая структура тестов (появляется по мере реализации этапов `docs/lumen_todo.md`):
-- `tests/test_smoke.py` — smoke-тесты CLI (уже есть)
-- `tests/test_lexer.py`
-- `tests/test_parser.py`
-- `tests/test_interpreter.py`
-- `tests/test_transforms.py`
-- `tests/test_morph.py`
-- `tests/golden/` — golden-тесты (.lumen + .expected)
+Тесты:
+- `tests/test_smoke.py` — CLI
+- `tests/test_lexer.py`, `tests/test_parser.py`
+- `tests/test_interpreter.py`, `tests/test_transforms.py`, `tests/test_errors.py`
+- `tests/test_morph.py`, `tests/test_dissonance.py`, `tests/test_require.py`
+- `tests/golden/` — пары `.lumen` + `.expected`
 
 ---
 

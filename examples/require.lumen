@@ -1,0 +1,17 @@
+morph door
+  state status: String = "closed"
+
+  transform "lock"
+    require state.status == "closed"
+    state.status = "locked"
+  end
+
+  transform "again"
+    skip if state.status == "locked"
+    require false
+    print("nope")
+  end
+end
+
+door.run()
+print(door.state.status)

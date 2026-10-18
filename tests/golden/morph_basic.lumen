@@ -1,0 +1,15 @@
+morph counter
+  state value: Number = 0
+
+  transform "increment"
+    state.value = state.value + 1
+  end
+
+  transform "double"
+    state.value = state.value * 2
+  end
+end
+
+counter.run()
+print(counter.state.value)
+print(len(counter.history))

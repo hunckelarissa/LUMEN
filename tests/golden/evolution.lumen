@@ -1,0 +1,9 @@
+def show(v)
+  when Number then print("number: ", v)
+  when String then print("string: ", v)
+  when List   then print("list of ", len(v), " items")
+end
+
+show(10)
+show("hello")
+show([1, 2, 3])

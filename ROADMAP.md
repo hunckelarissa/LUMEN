@@ -1,6 +1,6 @@
 # ROADMAP разработки языка LUMEN
-**Версия документа:** 0.0.3  
-**Дата обновления:** 12.04.2026
+**Версия документа:** 0.0.4  
+**Дата обновления:** 18.10.2026
 
 ---
 
@@ -21,62 +21,63 @@
 
 ---
 
-## Этап 1. Прототип интерпретатора на Python — v0.1.0
+## Этап 1. Прототип интерпретатора на Python
 
 **Цель:** минимальный рабочий интерпретатор, проверяющий идеи парадигмы.  
-**Стек:** Python 3.10+, стандартная библиотека, ручной рекурсивный спуск.
+**Стек:** Python 3.10+, стандартная библиотека, ручной рекурсивный спуск.  
+**Версия пакета:** 0.0.4. Команда `python lumen.py version` печатает `lumen 0.0.4`. Метка `LUMEN 0.1.0` в раннем чеклисте `docs/lumen_todo.md` — прежнее имя этапа, CLI её не выводит.
 
 ### 1a. Лексер и токены
-- [ ] Класс `TokenType` (enum) со всеми ключевыми словами, операторами, литералами
-- [ ] Класс `Lexer` — посимвольная токенизация
-- [ ] Поддержка morph-ключевых слов: `morph`, `transform`, `state`, `skip`
-- [ ] Поддержка LLM-директив: `shadow`, `think`, `reason`, `explain`
-- [ ] Поддержка `break`, `continue`
-- [ ] Тесты лексера
+- [x] Класс `TokenType` (enum) со всеми ключевыми словами, операторами, литералами
+- [x] Класс `Lexer` — посимвольная токенизация
+- [x] Поддержка morph-ключевых слов: `morph`, `transform`, `state`, `skip`
+- [x] Поддержка LLM-директив: `shadow`, `think`, `reason`, `explain`
+- [x] Поддержка `break`, `continue`
+- [x] Тесты лексера
 
 ### 1b. AST и парсер
-- [ ] Датаклассы для всех узлов AST (включая `MorphStmt`, `TransformClause`, `StateDecl`)
-- [ ] Рекурсивный нисходящий парсер с приоритетами операций
-- [ ] Парсинг morph-блоков, transform, state, skip if
-- [ ] Парсинг LLM-директив (shadow, think, reason, explain)
-- [ ] Парсинг break/continue
-- [ ] Тесты парсера
+- [x] Датаклассы для всех узлов AST (включая `MorphStmt`, `TransformClause`, `StateDecl`)
+- [x] Рекурсивный нисходящий парсер с приоритетами операций
+- [x] Парсинг morph-блоков, transform, state, skip if
+- [x] Парсинг LLM-директив (shadow, think, reason, explain)
+- [x] Парсинг break/continue
+- [x] Тесты парсера
 
 ### 1c. Окружение, типы, трансформации
-- [ ] Класс `Environment` (связный список таблиц имён)
-- [ ] Типы: Number, String, Boolean, List, Map, Function, Morph, Context, Null
-- [ ] Все правила явной трансформации (`as`)
-- [ ] Все правила неявной трансформации (через операторы)
-- [ ] Тесты трансформаций
+- [x] Класс `Environment` (связный список таблиц имён)
+- [x] Типы: Number, String, Boolean, List, Map, Function, Morph, Context, Null
+- [x] Все правила явной трансформации (`as`)
+- [x] Все правила неявной трансформации (через операторы)
+- [x] Тесты трансформаций
 
 ### 1d. Интерпретатор
-- [ ] Присваивание, условия (`if/elsif/else`), циклы (`while`, `for`), `break`, `continue`
-- [ ] Функции с замыканиями, эволюция функций (`when`-dispatch)
-- [ ] Живые структуры (Map): добавление/изменение/удаление полей
-- [ ] Morph-блоки: state, transform, skip if, .run(), .history
-- [ ] LLM-директивы: парсинг без исполнения, хранение в метаданных
-- [ ] Встроенные функции (print, len, type, str, num, append, keys, values, has, range, map, filter, sort, split, join, replace, input, exit)
-- [ ] Контексты (cli, test)
-- [ ] Тесты интерпретатора
-- [ ] Тесты обработки ошибок
+- [x] Присваивание, условия (`if/elsif/else`), циклы (`while`, `for`), `break`, `continue`
+- [x] Функции с замыканиями, эволюция функций (`when`-dispatch)
+- [x] Живые структуры (Map): добавление/изменение/удаление полей
+- [x] Morph-блоки: state, transform, skip if, .run(), .history
+- [x] LLM-директивы: парсинг без исполнения, хранение в метаданных
+- [x] Встроенные функции (print, len, type, str, num, append, keys, values, has, range, map, filter, sort, split, join, replace, input, exit)
+- [x] Контексты (cli, test)
+- [x] Тесты интерпретатора
+- [x] Тесты обработки ошибок
 
 ### 1e. CLI и REPL
-- [ ] `lumen run <file>` — интерпретация файла
-- [ ] `lumen repl` — интерактивный режим с сохранением состояния
-- [ ] `lumen version` — вывод версии
+- [x] `lumen run <file>` — интерпретация файла
+- [x] `lumen repl` — интерактивный режим с сохранением состояния
+- [x] `lumen version` — вывод версии
 
 ### 1f. Тесты и примеры
-- [ ] Golden-тесты (hello, transforms, evolution, living_map, morph_basic, morph_skip)
-- [ ] Примеры: hello, transforms, evolution, living_map, fibonacci, fizzbuzz, morph_pipeline, morph_agent
-- [ ] Покрытие тестами ≥ 70%
+- [x] Golden-тесты (hello, transforms, evolution, living_map, morph_basic, morph_skip)
+- [x] Примеры: hello, transforms, evolution, living_map, fibonacci, fizzbuzz, morph_pipeline, morph_agent
+- [ ] Покрытие тестами ≥ 70% (порог не замерялся в этой среде; набор тестов есть)
 
 ### Критерии готовности v0.1.0
-- [ ] Интерпретатор выполняет все примеры из спецификации
-- [ ] Morph-блоки: state, transform, skip if, .run(), .history работают
-- [ ] Эволюция функций через when работает
-- [ ] REPL запускается и работает интерактивно
+- [x] Интерпретатор выполняет все примеры из спецификации
+- [x] Morph-блоки: state, transform, skip if, .run(), .history работают
+- [x] Эволюция функций через when работает
+- [x] REPL запускается и работает интерактивно
 - [ ] Тесты ≥ 70% покрытия
-- [ ] Работает на Linux и Windows
+- [x] Работает на Windows; Linux в этой среде не проверялся
 
 ---
 
@@ -85,12 +86,12 @@
 **Цель:** расширить язык до практически полезного инструмента.
 
 - [ ] Модульная система (`import`)
-- [ ] Композиция morph-блоков (вложенные morph)
+- [x] Композиция morph-блоков (вложенные morph)
 - [ ] Ключевое слово `extend` для расширения функций из модулей
-- [ ] Ключевое слово `require` для предусловий в transform
+- [x] Ключевое слово `require` для предусловий в transform
 - [ ] Ключевое слово `grow` для семантического накопления
 - [ ] Встроенная функция `trace` для трассировки
-- [ ] Диссонанс: режимы strict / soft / creative
+- [x] Диссонанс: режимы strict / soft / creative
 - [ ] Режимы типизации
 - [ ] Многострочные комментарии (`=begin`/`=end`)
 - [ ] Автогенерация `llms.txt` из shadow/reason/explain

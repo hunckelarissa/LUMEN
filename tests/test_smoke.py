@@ -29,9 +29,14 @@ def test_cli_banner(capsys):
     assert "L U M E N" in out
 
 
-def test_cli_run_not_implemented(capsys):
-    assert main(["run", "examples/hello.lumen"]) == 2
-    assert "не реализована" in capsys.readouterr().out
+def test_cli_run_hello(capsys):
+    path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "examples",
+        "hello.lumen",
+    )
+    assert main(["run", path]) == 0
+    assert capsys.readouterr().out.strip() == "Hello, World!"
 
 
 def test_cli_unknown_command(capsys):

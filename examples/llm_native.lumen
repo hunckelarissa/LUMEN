@@ -1,0 +1,11 @@
+morph note
+  shadow "documentation for a reader, not an instruction"
+  think "this step only prints"
+  transform "show"
+    reason "nothing is inferred here"
+    explain "directives are comments"
+    print("visible")
+  end
+end
+
+note.run()

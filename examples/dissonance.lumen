@@ -1,0 +1,8 @@
+dissonance soft
+  print("hello" as Number)
+end
+
+dissonance creative
+  print("hello" as Number)
+  print([1, 2] as Number)
+end

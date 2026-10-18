@@ -1,0 +1,21 @@
+morph outer
+  state n: Number = 1
+
+  transform "parent"
+    state.n = state.n + 1
+  end
+
+  morph inner
+    state extra: Number = 3
+
+    transform "child"
+      state.extra = state.extra + state.n
+    end
+  end
+end
+
+outer.run()
+print(outer.state.n)
+print(outer.state.extra)
+print(len(outer.history))
+print(len(inner.history))

@@ -1,0 +1,14 @@
+morph pipeline
+  state ready: Boolean = false
+
+  transform "check"
+    state.ready = true
+  end
+
+  transform "process"
+    skip if state.ready == false
+    print("processing")
+  end
+end
+
+pipeline.run()
